@@ -36,7 +36,7 @@ whichever comes first. Then, an animated GIF of the simulation is produced.
 Program usage details in help section (press 5, then 2).
 '''
 # HELP FILE -------------------------------------------------------------------
-help_file = "HELP FILE #####################################################################"\
+helpFile = "HELP FILE #####################################################################"\
 + "\nHow to use the Game of Life GIF Creator by Julian Nicolai"\
 + "\n"\
 + "\nUpdated April 17th 2020"\
@@ -191,54 +191,54 @@ def set_pixel(image: Cimpl.Image, res: int, color: Cimpl.Color, x: int, y: int, 
     is specified using the "true" coordinates (given by real_coords).
     '''
     if state:
-        state_color = color
+        stateColor = color
     else:
-        state_color = Cimpl.Color(255,255,255)
+        stateColor = Cimpl.Color(255,255,255)
         
-    for y_pix in range(res - 1):
-        for x_pix in range (res - 1):
-            Cimpl.set_color(image, x + x_pix, y + y_pix, state_color)
+    for yPix in range(res - 1):
+        for xPix in range (res - 1):
+            Cimpl.set_color(image, x + xPix, y + yPix, stateColor)
 
 def real_coords(res: int, x: int, y: int) -> tuple:
     '''Returns an adjusted coordinate for placement of pixels.
     '''
-    real_x = x * res + 1
-    real_y = y * res + 1
+    realX = x * res + 1
+    realY = y * res + 1
     
-    return (real_x, real_y)
+    return (realX, realY)
 
-def create_empty_board(res: int, w_blocks: int, h_blocks: int) -> Tuple[Cimpl.Image, List[list]]:
+def create_empty_board(res: int, wBlocks: int, hBlocks: int) -> Tuple[Cimpl.Image, List[list]]:
     '''Returns an empty grid (board) as well as a list of all starting states 
     (dead).
     '''
-    width, height = real_coords(res, w_blocks, h_blocks)    
+    width, height = real_coords(res, wBlocks, hBlocks)    
     
-    empty_board = Cimpl.create_image(width, height, Cimpl.Color(255,255,255))
+    emptyBoard = Cimpl.create_image(width, height, Cimpl.Color(255,255,255))
     
-    for pixel in empty_board:
+    for pixel in emptyBoard:
         x, y = pixel[0], pixel[1]
         if x % res == 0 or y % res == 0:
-            Cimpl.set_color(empty_board, x, y, Cimpl.Color(170,170,170))
+            Cimpl.set_color(emptyBoard, x, y, Cimpl.Color(170,170,170))
     
-    total_state_list = []
+    totalStateList = []
     
-    for y in range(h_blocks):
-        x_state_list = []
+    for y in range(hBlocks):
+        xStateList = []
         
-        for x in range(w_blocks):
-            x_state_list += [0]
+        for x in range(wBlocks):
+            xStateList += [0]
             
-        total_state_list += [x_state_list]
+        totalStateList += [xStateList]
     
-    return empty_board, total_state_list
+    return emptyBoard, totalStateList
 
-def refresh_board(game_board: Cimpl.Image, res: int, color: Cimpl.Color, state_list: List[list]) -> None:
+def refresh_board(gameBoard: Cimpl.Image, res: int, color: Cimpl.Color, stateList: List[list]) -> None:
     '''Takes the current states of living & dead blocks, and updates the game 
     board.
     '''
-    for x in range((Cimpl.get_width(game_board) - 1) // res):
-        for y in range((Cimpl.get_height(game_board) - 1) // res):
-            set_pixel(game_board, res, color, *real_coords(res, x, y), state_list[y][x])
+    for x in range((Cimpl.get_width(gameBoard) - 1) // res):
+        for y in range((Cimpl.get_height(gameBoard) - 1) // res):
+            set_pixel(gameBoard, res, color, *real_coords(res, x, y), stateList[y][x])
 
 def scan_block(x: int, y: int, width: int, height: int) -> Tuple[tuple]:
     '''Creates a tuple of all coordinates that need to be checked around a 
@@ -264,35 +264,35 @@ def scan_block(x: int, y: int, width: int, height: int) -> Tuple[tuple]:
     
     return block
 
-def place_item(state_list: List[list], item: Tuple[tuple], x_offset: int = 0, y_offset: int = 0) -> List[list]:
+def place_item(stateList: List[list], item: Tuple[tuple], xOffset: int = 0, yOffset: int = 0) -> List[list]:
     '''Returns the updated state list after placing an item on the game board.
     The x and y offsets allows its location to be specified. Default is (0, 0).
     '''
     for x, y in item:
-        state_list[y + y_offset][x + x_offset] = 1
+        stateList[y + yOffset][x + xOffset] = 1
     
-    return state_list
+    return stateList
 
-def extract_coords(input_string: str) -> Tuple[tuple]:
+def extract_coords(inputString: str) -> Tuple[tuple]:
     '''Returns a tuple of coordinates from a user inputted string list.
     '''
-    xy_list, xcoords, ycoords, coords = [], [], [], []
-    last_digit = False
-    for char in input_string:
+    xyList, xcoords, ycoords, coords = [], [], [], []
+    lastDigit = False
+    for char in inputString:
         if char.isdigit():
             
-            if last_digit == True:
-                xy_list[-1] += char
+            if lastDigit == True:
+                xyList[-1] += char
             else:
-                xy_list += [char]
+                xyList += [char]
                 
-            last_digit = True
+            lastDigit = True
             
         else:
-            last_digit = False
+            lastDigit = False
         
     pos = 0
-    for num in xy_list:
+    for num in xyList:
         if pos % 2 == 0:
             xcoords += [int(num)]
         else:
@@ -304,23 +304,23 @@ def extract_coords(input_string: str) -> Tuple[tuple]:
     
     return tuple(coords)
 
-def extract_single_coord(input_string: str) -> Tuple[int]:
-    xy_list, coord = [], []
-    last_digit = False
-    for char in input_string:
+def extract_single_coord(inputString: str) -> Tuple[int]:
+    xyList, coord = [], []
+    lastDigit = False
+    for char in inputString:
         if char.isdigit():
             
-            if last_digit == True:
-                xy_list[-1] += char
+            if lastDigit == True:
+                xyList[-1] += char
             else:
-                xy_list += [char]
+                xyList += [char]
                 
-            last_digit = True
+            lastDigit = True
             
         else:
-            last_digit = False
+            lastDigit = False
     
-    for item in xy_list:
+    for item in xyList:
         coord += [int(item)]
     
     for num in range(len(coord)):
@@ -329,35 +329,35 @@ def extract_single_coord(input_string: str) -> Tuple[int]:
     
     return tuple(coord)
 
-def save_state_to_file(state_list: List[list], board_filename: str) -> None:
-    coord_list = []
-    sanitized_coords = ""
+def save_state_to_file(stateList: List[list], boardFilename: str) -> None:
+    coordList = []
+    sanitizedCoords = ""
     
-    for y in range(len(state_list)):
-        for x in range(len(state_list[0])):
-            if state_list[y][x] == 1:
-                coord_list += [(x,y)]
+    for y in range(len(stateList)):
+        for x in range(len(stateList[0])):
+            if stateList[y][x] == 1:
+                coordList += [(x,y)]
     
-    for coord in coord_list:
-        sanitized_coords += str(coord[0]) + " " + str(coord[1]) + "\n"
+    for coord in coordList:
+        sanitizedCoords += str(coord[0]) + " " + str(coord[1]) + "\n"
         
-    save_file = open(board_filename, "w+")
+    saveFile = open(boardFilename, "w+")
     
-    save_file.write(sanitized_coords)
+    saveFile.write(sanitizedCoords)
     
-def load_state_from_file(board_filename: str) -> Tuple[tuple]:
-    item_data = open(board_filename, 'r')    
+def load_state_from_file(boardFilename: str) -> Tuple[tuple]:
+    itemData = open(boardFilename, 'r')    
     
     coords = []
-    for line in item_data:
-        line_data = line.split()
-        line_data = (int(line_data[0]), int(line_data[1]))
+    for line in itemData:
+        lineData = line.split()
+        lineData = (int(lineData[0]), int(lineData[1]))
         
-        coords += [line_data]
+        coords += [lineData]
         
-    item_coords = tuple(coords)
+    itemCoords = tuple(coords)
     
-    return item_coords
+    return itemCoords
 
 def check_directory():
     '''Checks if the 'images' directory exists, if not creates it.
@@ -367,12 +367,12 @@ def check_directory():
         os.mkdir(path)
     return None
 
-def remove_old_frames(frame_names: str):
-    imgs = glob.glob(frame_names)
+def remove_old_frames(frameNames: str):
+    imgs = glob.glob(frameNames)
     for i in imgs:
         os.remove(i)
 
-def save_gif(frame_names: str, save_gif: str, ms_per_frame: int = 150) -> None:
+def save_gif(frameNames: str, saveGif: str, msPerFrame: int = 150) -> None:
     '''Takes the name of the saved frames, and combines them into a gif under 
     the name of the specified filename. Providing a duration changes how long 
     each frame is displayed. Default is 150 ms.
@@ -388,7 +388,7 @@ def save_gif(frame_names: str, save_gif: str, ms_per_frame: int = 150) -> None:
     filenames = []
     frames = []
     
-    imgs = glob.glob(frame_names)
+    imgs = glob.glob(frameNames)
     
     for i in imgs:
         filenames.append(i)
@@ -397,96 +397,121 @@ def save_gif(frame_names: str, save_gif: str, ms_per_frame: int = 150) -> None:
                        int("".join([i for i in x if i.isdigit()])))
     
     for j in filenames:
-        new_frame = PIL.Image.open(j)
-        frames.append(new_frame)
+        newFrame = PIL.Image.open(j)
+        frames.append(newFrame)
     
-    frames[0].save(save_gif, 
+    frames[0].save(saveGif, 
                    format = 'GIF',
                    append_images = frames[1:],
                    save_all = True,
-                   duration = ms_per_frame, 
+                   duration = msPerFrame, 
                    loop = 0)
 
 # MAIN SCRIPT BEGINS
 # ITEM PRESETS ----------------------------------------------------------------
-sml_spaceship = ((2,1), (3,2), (1,3), (2,3), (3,3))
-med_spaceship = ((2,1),(5,1),(6,2),(6,3),(6,4),(5,4),(4,4),(3,4),(2,3))
-lrg_spaceship = ((3,5),(4,5),(5,5),(6,5),(7,5),(7,4),(7,3),(6,2),(4,1),(2,2),(2,4))
-ex_lrg_spaceship = ((3,5),(4,5),(5,5),(6,5),(7,5),(8,5),(8,4),(8,3),(7,2),(5,1),(4,1),(2,2),(2,4))
-glider_gun = ((1,5),(1,6),(2,5),(2,6),
-              (35,3),(35,4),(36,3),(36,4),
-              (25,1),(25,2),(25,6),(25,7),(23,2),(23,6),(22,3),(22,4),(22,5),(21,3),(21,4),(21,5),
-              (13,3),(14,3),(13,9),(14,9),(12,4),(12,8),(11,5),(11,6),(11,7),
-              (15,6),(16,4),(16,8),(17,7),(17,6),(17,5),(18,6))
 
-blinker2 = ((1,2),(2,2),(3,2))
-toad2 = ((2,2),(3,2),(4,2),
-         (1,3),(2,3),(3,3))
-beacon2 = ((1,1),(1,2),(2,1),
-           (4,4),(3,4),(4,3),)
-pulsar3 = ((4,2),(5,2),(6,2),(10,2),(11,2),(12,2),
-           (2,4),(7,4),(9,4),(14,4),
-           (2,5),(7,5),(9,5),(14,5),
-           (2,6),(7,6),(9,6),(14,6),
-           (4,7),(5,7),(6,7),(10,7),(11,7),(12,7),
-           (4,9),(5,9),(6,9),(10,9),(11,9),(12,9),
-           (2,10),(7,10),(9,10),(14,10),
-           (2,11),(7,11),(9,11),(14,11),
-           (2,12),(7,12),(9,12),(14,12),
-           (4,14),(5,14),(6,14),(10,14),(11,14),(12,14))
-penta15 = ((5,4),(5,5),(4,6),(6,6),(5,7),(5,8),(5,9),(5,10),(4,11),(6,11),(5,12),(5,13))
+# Spaceships
+SML_SPACESHIP =    ((2,1),(3,2),(1,3),(2,3),
+                    (3,3))
+MED_SPACESHIP =  ((2,1),(5,1),(6,2),(6,3),
+                    (6,4),(5,4),(4,4),(3,4),
+                    (2,3))
+LRG_SPACESHIP =    ((3,5),(4,5),(5,5),(6,5),
+                    (7,5),(7,4),(7,3),(6,2),
+                    (4,1),(2,2),(2,4))
+EX_LRG_SPACESHIP = ((3,5),(4,5),(5,5),(6,5),
+                    (7,5),(8,5),(8,4),(8,3),
+                    (7,2),(5,1),(4,1),(2,2),
+                    (2,4))
+GLIDER_GUN =       ((1,5),(1,6),(2,5),(2,6),
+                    (35,3),(35,4),(36,3),(36,4),
+                    (25,1),(25,2),(25,6),(25,7),
+                    (23,2),(23,6),(22,3),(22,4),
+                    (22,5),(21,3),(21,4),(21,5),
+                    (13,3),(14,3),(13,9),(14,9),
+                    (12,4),(12,8),(11,5),(11,6),
+                    (11,7),(15,6),(16,4),(16,8),
+                    (17,7),(17,6),(17,5),(18,6))
 
-block = ((1,1),(1,2),(2,2),(2,1),)
-beehive = ((1,2),(2,1),(3,1),(4,2),(2,3),(3,3))
-loaf = ((2,1),(3,1),(4,2),(4,3),(1,2),(2,3),(3,4))
-boat = ((1,1),(1,2),(2,1),(3,2),(2,3))
-tub = ((2,1),(2,3),(3,2),(1,2))
-
-Rpentomino = ((2,1),(3,1),(1,2),(2,2),(2,3))
-diehard = ((1,2),(2,2),(2,3),(6,3),(7,3),(8,3),(7,1))
-acorn = ((1,3),(2,3),(2,1),(4,2),(5,3),(6,3),(7,3))
+# Oscillators
+BLINKER2 =         ((1,2),(2,2),(3,2))
+TOAD2 =            ((2,2),(3,2),(4,2),(1,3),
+                    (2,3),(3,3))
+BEACON2 =          ((1,1),(1,2),(2,1),(4,4),
+                    (3,4),(4,3))
+PULSAR3 =          ((4,2),(5,2),(6,2),(10,2),
+                    (11,2),(12,2),(2,4),(7,4),
+                    (9,4),(14,4),(2,5),(7,5),
+                    (9,5),(14,5),(2,6),(7,6),
+                    (9,6),(14,6),(4,7),(5,7),
+                    (6,7),(10,7),(11,7),(12,7),
+                    (4,9),(5,9),(6,9),(10,9),
+                    (11,9),(12,9),(11,14),(12,14),
+                    (2,10),(7,10),(9,10),(14,10),
+                    (2,11),(7,11),(9,11),(14,11),
+                    (2,12),(7,12),(9,12),(14,12),
+                    (4,14),(5,14),(6,14),(10,14))
+PENTA15 =          ((5,4),(5,5),(4,6),(6,6),
+                    (5,7),(5,8),(5,9),(5,10),
+                    (4,11),(6,11),(5,12),(5,13))
+# Still Lifes
+BLOCK =            ((1,1),(1,2),(2,2),(2,1))
+BEEHIVE =          ((1,2),(2,1),(3,1),(4,2),
+                    (2,3),(3,3))
+LOAF =             ((2,1),(3,1),(4,2),(4,3),
+                    (1,2),(2,3),(3,4))
+BOAT =             ((1,1),(1,2),(2,1),(3,2),
+                    (2,3))
+TUB =              ((2,1),(2,3),(3,2),(1,2))
+# Methuselahs
+R_PENTOMINO =       ((2,1),(3,1),(1,2),(2,2),
+                    (2,3))
+DIEHARD =          ((1,2),(2,2),(2,3),(6,3),
+                    (7,3),(8,3),(7,1))
+ACORN =            ((1,3),(2,3),(2,1),(4,2),
+                    (5,3),(6,3),(7,3))
 
 PRESETS = {
-           '1':[{'1':[block,'Block'],
-                 '2':[beehive,'Beehive'],
-                 '3':[loaf,'Loaf'],
-                 '4':[boat,'Boat'],
-                 '5':[tub,'Tub'],
+           '1':[{'1':[BLOCK,'Block'],
+                 '2':[BEEHIVE,'Beehive'],
+                 '3':[LOAF,'Loaf'],
+                 '4':[BOAT,'Boat'],
+                 '5':[TUB,'Tub'],
                  },'Still Lifes'],
-           '2':[{'1':[blinker2,'Blinker (P2)'],
-                 '2':[toad2,'Toad (P2)'],
-                 '3':[beacon2,'Beacon (P2)'],
-                 '4':[pulsar3,'Pulsar (P3)'],
-                 '5':[penta15,'Penta-decathlon (P15)'],
+           '2':[{'1':[BLINKER2,'Blinker (P2)'],
+                 '2':[TOAD2,'Toad (P2)'],
+                 '3':[BEACON2,'Beacon (P2)'],
+                 '4':[PULSAR3,'Pulsar (P3)'],
+                 '5':[PENTA15,'Penta-decathlon (P15)'],
                  },'Oscillators'],
-           '3':[{'1':[sml_spaceship,'Small'],
-                 '2':[med_spaceship,'Medium'],
-                 '3':[lrg_spaceship,'Large'],
-                 '4':[ex_lrg_spaceship,'Extra-Large'],
-                 '5':[glider_gun, 'Glider Gun'],
+           '3':[{'1':[SML_SPACESHIP,'Small'],
+                 '2':[MED_SPACESHIP,'Medium'],
+                 '3':[LRG_SPACESHIP,'Large'],
+                 '4':[EX_LRG_SPACESHIP,'Extra-Large'],
+                 '5':[GLIDER_GUN, 'Glider Gun'],
                  },'Spaceships'],
-           '4':[{'1':[Rpentomino,'R-Pentomino (P??)'],
-                 '2':[diehard,'Diehard (P130)'],
-                 '3':[acorn,'Acorn (P5206)'],
+           '4':[{'1':[R_PENTOMINO,'R-Pentomino (P??)'],
+                 '2':[DIEHARD,'Diehard (P130)'],
+                 '3':[ACORN,'Acorn (P5206)'],
                  }, 'Methuselahs']
            }
 
 # DEFAULT VALUES --------------------------------------------------------------
 width, height = DEF_WIDTH, DEF_HEIGHT = 40, 40
-max_frames = DEF_MAX_FRAMES = 50
+maxFrames = DEF_MAX_FRAMES = 50
 res = DEF_RES = 16
 duration = DEF_DURATION = 150
-gif_file = DEF_GIF_FILE = "simulation.gif"
-block_color = DEF_BLOCK_COLOR = Cimpl.Color(0, 0, 0)
+gifFile = DEF_GIF_FILE = "simulation.gif"
+blockColor = DEF_BLOCK_COLOR = Cimpl.Color(0, 0, 0)
 
 # LOADING ---------------------------------------------------------------------
 print("Game of Life GIF Creator v1.0; by Julian Nicolai")
 
-game_board, updated_state_list = create_empty_board(DEF_RES, DEF_WIDTH, DEF_HEIGHT)
+gameBoard, updatedStateList = create_empty_board(DEF_RES, DEF_WIDTH, DEF_HEIGHT)
 
 # USER INTERFACE --------------------------------------------------------------
-interface_loop = True
-while interface_loop == True:
+interfaceLoop = True
+while interfaceLoop == True:
     print("\nTo go back, enter 'q' into the selection prompt.")
     print("Select one of the following options:")
     print("1: Place Item")
@@ -495,328 +520,328 @@ while interface_loop == True:
     print("4: Run Simulation")
     print("5: Settings, Help, Quit")
        
-    refresh_board(game_board, res, block_color, updated_state_list)
+    refresh_board(gameBoard, res, blockColor, updatedStateList)
     
     selection = input("\nPROMPT: ")
     
     if selection == '1':
-        place_loop = True
-        while place_loop == True:
+        placeLoop = True
+        while placeLoop == True:
             print("\nPLACE:")
             print("1: Preset Item")
             print("2: Custom Item")
             print("3: Load Coordinate List")
-            item_selection = input("\nPROMPT: ")
+            itemSelection = input("\nPROMPT: ")
             
-            if item_selection == '1':
-                preset_cat_loop = True
-                while preset_cat_loop == True:                
+            if itemSelection == '1':
+                presetCatLoop = True
+                while presetCatLoop == True:                
                     print("\nCATAGORIES: ")
-                    sel_num = 0
-                    for preset_num in PRESETS.keys():
-                        sel_num += 1
-                        print(str(sel_num) + ":", PRESETS[preset_num][1])
+                    selNum = 0
+                    for presetNum in PRESETS.keys():
+                        selNum += 1
+                        print(str(selNum) + ":", PRESETS[presetNum][1])
                     
-                    cat_selection = input("\nPROMPT: ").lower()
+                    catSelection = input("\nPROMPT: ").lower()
                     
-                    if cat_selection != 'q':
-                        if cat_selection in PRESETS.keys():
-                            preset_item_loop = True
-                            while preset_item_loop == True:
-                                print("\nITEMS IN CATEGORY " + PRESETS[cat_selection][1].upper() + ":")
+                    if catSelection != 'q':
+                        if catSelection in PRESETS.keys():
+                            presetItemLoop = True
+                            while presetItemLoop == True:
+                                print("\nITEMS IN CATEGORY " + PRESETS[catSelection][1].upper() + ":")
                                 
-                                sel_num = 0
-                                for preset_num in PRESETS[cat_selection][0].keys():
-                                    sel_num += 1
-                                    print(str(sel_num) + ":", PRESETS[cat_selection][0][preset_num][1])  
+                                selNum = 0
+                                for presetNum in PRESETS[catSelection][0].keys():
+                                    selNum += 1
+                                    print(str(selNum) + ":", PRESETS[catSelection][0][presetNum][1])  
                                     
-                                item_selection = input("\nPROMPT: ")
+                                itemSelection = input("\nPROMPT: ")
                                 
-                                if item_selection != 'q':
-                                    if item_selection in PRESETS[cat_selection][0].keys():
+                                if itemSelection != 'q':
+                                    if itemSelection in PRESETS[catSelection][0].keys():
                                         
                                         print("\nPOSITION:")
-                                        x_offset = input("\nPROMPT (x offset): ")
-                                        y_offset = input("PROMPT (y offset): ")
+                                        xOffset = input("\nPROMPT (x offset): ")
+                                        yOffset = input("PROMPT (y offset): ")
                                         
-                                        if x_offset == '':
-                                            x_offset = 0
+                                        if xOffset == '':
+                                            xOffset = 0
                                         else:
-                                            x_offset = int(x_offset)
+                                            xOffset = int(xOffset)
                                             
-                                        if y_offset == '':
-                                            y_offset = 0
+                                        if yOffset == '':
+                                            yOffset = 0
                                         else:
-                                            y_offset = int(y_offset)
+                                            yOffset = int(yOffset)
                                         
-                                        item_coords = PRESETS[cat_selection][0][item_selection][0]
+                                        itemCoords = PRESETS[catSelection][0][itemSelection][0]
                                         
-                                        updated_state_list = place_item(updated_state_list, item_coords, x_offset, y_offset)
-                                        preset_cat_loop = False
-                                        preset_item_loop = False
+                                        updatedStateList = place_item(updatedStateList, itemCoords, xOffset, yOffset)
+                                        presetCatLoop = False
+                                        presetItemLoop = False
                                         
                                     else:
                                         input("\nERROR: No such selection exists. Press enter:")
                                 else:
-                                    preset_item_loop = False
+                                    presetItemLoop = False
                         else:
                             input("\nERROR: No such selection exists. Press enter:")
                     else:
-                        preset_cat_loop = False
+                        presetCatLoop = False
             
-            elif item_selection == '2':
+            elif itemSelection == '2':
                 print("COORDINATE LIST:")
                 print("ex: (1,3), (4,5), (7,8)")
                 
-                custom_selection = input("\nPROMPT (coordinates): ")
+                customSelection = input("\nPROMPT (coordinates): ")
                 
                 print("\nPOSITION:")
-                x_offset = input("\nPROMPT (x offset): ")
-                y_offset = input("PROMPT (y offset): ")
+                xOffset = input("\nPROMPT (x offset): ")
+                yOffset = input("PROMPT (y offset): ")
                 
-                if x_offset == '':
-                    x_offset = 0
+                if xOffset == '':
+                    xOffset = 0
                 else:
-                    x_offset = int(x_offset)
+                    xOffset = int(xOffset)
                     
-                if y_offset == '':
-                    y_offset = 0
+                if yOffset == '':
+                    yOffset = 0
                 else:
-                    y_offset = int(y_offset)                
+                    yOffset = int(yOffset)                
                 
-                item_coords = extract_coords(custom_selection)
+                itemCoords = extract_coords(customSelection)
                 
-                updated_state_list = place_item(updated_state_list, item_coords, x_offset, y_offset)
+                updatedStateList = place_item(updatedStateList, itemCoords, xOffset, yOffset)
                 
-            elif item_selection == '3':
+            elif itemSelection == '3':
                 print("\nLOAD DATA:")
                 print("\nChoosing file...")
                 filename = Cimpl.choose_file()
-                item_data = open(filename, 'r')
+                itemData = open(filename, 'r')
                 print("Data loaded successfully from path:")
                 print(filename)                
                 
                 print("\nPOSITION:")
-                x_offset = input("\nPROMPT (x offset): ")
-                y_offset = input("PROMPT (y offset): ")
+                xOffset = input("\nPROMPT (x offset): ")
+                yOffset = input("PROMPT (y offset): ")
                 
-                if x_offset == '':
-                    x_offset = 0
+                if xOffset == '':
+                    xOffset = 0
                 else:
-                    x_offset = int(x_offset)
+                    xOffset = int(xOffset)
                     
-                if y_offset == '':
-                    y_offset = 0
+                if yOffset == '':
+                    yOffset = 0
                 else:
-                    y_offset = int(y_offset)                
+                    yOffset = int(yOffset)                
                 
                 coords = []
-                for line in item_data:
-                    line_data = line.split()
-                    line_data = (int(line_data[0]), int(line_data[1]))
+                for line in itemData:
+                    lineData = line.split()
+                    lineData = (int(lineData[0]), int(lineData[1]))
                     
-                    coords += [line_data]
+                    coords += [lineData]
                     
-                item_coords = tuple(coords)
+                itemCoords = tuple(coords)
                 
-                updated_state_list = place_item(updated_state_list, item_coords, x_offset, y_offset)
+                updatedStateList = place_item(updatedStateList, itemCoords, xOffset, yOffset)
             
-            elif item_selection == 'q':
-                place_loop = False
+            elif itemSelection == 'q':
+                placeLoop = False
             else:
                 input("\nERROR: No such selection exists. Press enter:")
     
     elif selection == '2':
-        ls_loop = True
-        while ls_loop == True:
+        lscLoop = True
+        while lscLoop == True:
             print("\nLOAD/SAVE:")
             print("1: Load Board")
             print("2: Save Board")
             print("3: Clear Board")
-            ls_sel = input("\nPROMPT: ")
+            lscSel = input("\nPROMPT: ")
             
-            if ls_sel != 'q':                    
-                if ls_sel == '1':
-                    load_loop = True
-                    while load_loop == True:
+            if lscSel != 'q':                    
+                if lscSel == '1':
+                    loadLoop = True
+                    while loadLoop == True:
                         load = input("\nLOAD BOARD? (Y/N): ").lower()
                         
                         if load == 'y':
-                            new_board_coords = load_state_from_file(Cimpl.choose_file())
-                            updated_state_list = place_item(updated_state_list, new_board_coords)
+                            newBoardCoords = load_state_from_file(Cimpl.choose_file())
+                            updatedStateList = place_item(updatedStateList, newBoardCoords)
                             
                         else:
                             print("\nINFO: No board loaded.")
-                            load_loop = False
+                            loadLoop = False
                             
-                        load_loop = False                        
+                        loadLoop = False                        
                             
-                elif ls_sel == '2':
-                    save_loop = True
-                    while save_loop == True:
+                elif lscSel == '2':
+                    saveLoop = True
+                    while saveLoop == True:
                             save = input("\nSAVE BOARD? (Y/N): ").lower()
                             
                             if save == 'y':
-                                save_filename = input("\nSAVE AS (.txt): ")
+                                saveFilename = input("\nSAVE AS (.txt): ")
                                 
-                                if ".txt" not in save_filename:
-                                    save_filename += ".txt"
+                                if ".txt" not in saveFilename:
+                                    saveFilename += ".txt"
                                 
-                                save_state_to_file(updated_state_list, save_filename)
+                                save_state_to_file(updatedStateList, saveFilename)
                             
                             else:
                                 print("\nINFO: Settings unchanged.")
-                                save_loop = False                    
+                                saveLoop = False                    
                             
-                            save_loop = False
+                            saveLoop = False
                     
-                elif ls_sel == '3':
-                    clear_loop = True
-                    while clear_loop == True:
+                elif lscSel == '3':
+                    clearLoop = True
+                    while clearLoop == True:
                             save = input("\nCLEAR BOARD? (Y/N): ").lower()
                             
                             if save == 'y':
-                                game_board, updated_state_list = create_empty_board(res, width, height)
+                                gameBoard, updatedStateList = create_empty_board(res, width, height)
                             
                             else:
                                 print("\nINFO: Settings unchanged.")
-                                clear_loop = False                    
+                                clearLoop = False                    
                             
-                            clear_loop = False                        
+                            clearLoop = False                        
                             
                 else:
                     input("\nERROR: No such selection exists. Press enter:")
                     
             else:
-                ls_loop = False
+                lscLoop = False
         
     elif selection == '3':
-        Cimpl.show(game_board)
+        Cimpl.show(gameBoard)
         
     elif selection == '4':
         print("INFO: This may take a while, please be patient. Running simulation....")
         
-        wildcard_frames = "images/frame*.png"
+        wildcardFrames = "images/frame*.png"
         count, check = 0, 0
         check_directory()
-        remove_old_frames(wildcard_frames)
-        original_updated_state_list = deepcopy(updated_state_list)
+        remove_old_frames(wildcardFrames)
+        originalUpdatedStateList = deepcopy(updatedStateList)
         # SIMULATION BEGINS ---------------------------------------------------
-        sim_loop = True
-        while sim_loop == True and count <= max_frames:
-            pixel_state_list = deepcopy(updated_state_list)
+        simLoop = True
+        while simLoop == True and count <= maxFrames:
+            pixelStateList = deepcopy(updatedStateList)
             
-            refresh_board(game_board, res, block_color, updated_state_list)
-            Cimpl.save_as(game_board, "images/frame" + str(count) + ".png")
+            refresh_board(gameBoard, res, blockColor, updatedStateList)
+            Cimpl.save_as(gameBoard, "images/frame" + str(count) + ".png")
             
-            for scan_y in range(height):
-                for scan_x in range(width):
+            for scanY in range(height):
+                for scanX in range(width):
                     
-                    block = scan_block(scan_x, scan_y, width, height)
+                    BLOCK = scan_block(scanX, scanY, width, height)
             
-                    live_count = 0
-                    for x, y in block:
+                    liveCount = 0
+                    for x, y in BLOCK:
                         if x != None and y != None:
             
-                            if pixel_state_list[y][x] == 1:
-                                live_count += 1        
+                            if pixelStateList[y][x] == 1:
+                                liveCount += 1        
             
-                    if pixel_state_list[scan_y][scan_x] == 0:
+                    if pixelStateList[scanY][scanX] == 0:
             
-                        if live_count == 3:
-                            updated_state_list[scan_y][scan_x] = 1
+                        if liveCount == 3:
+                            updatedStateList[scanY][scanX] = 1
                             
                     else:
-                        if live_count == 2 or live_count == 3:
-                            updated_state_list[scan_y][scan_x] = 1
+                        if liveCount == 2 or liveCount == 3:
+                            updatedStateList[scanY][scanX] = 1
                             
                         else:
-                            updated_state_list[scan_y][scan_x] = 0
+                            updatedStateList[scanY][scanX] = 0
             
             count += 1
             
-            if updated_state_list == pixel_state_list:
+            if updatedStateList == pixelStateList:
                 check += 1
                 if check == 3:
-                    sim_loop = False
+                    simLoop = False
                     
-        updated_state_list = deepcopy(original_updated_state_list)
+        updatedStateList = deepcopy(originalUpdatedStateList)
         # SAVE SIMULATION -----------------------------------------------------
-        save_gif(wildcard_frames, gif_file, duration)
+        save_gif(wildcardFrames, gifFile, duration)
         
     elif selection == '5':
-        misc_loop = True
-        while misc_loop == True:
+        miscLoop = True
+        while miscLoop == True:
             print("\nSelect one of the following:")  
             print("1: Settings")
             print("2: Help")
             print("3: Quit Program")
-            misc_sel = input("\nPROMPT: ")
+            miscSel = input("\nPROMPT: ")
             
-            if misc_sel != 'q':                    
-                if misc_sel == '1':
-                    setting_loop = True
-                    while setting_loop == True:
+            if miscSel != 'q':                    
+                if miscSel == '1':
+                    settingLoop = True
+                    while settingLoop == True:
                         print("\nSETTINGS:")
                         print("1: Board Grid Size")
                         print("2: Resolution per Block")
                         print("3: Block Color")
                         print("4: GIF Settings")
-                        setting_sel = input("\nPROMPT: ")
+                        settingSel = input("\nPROMPT: ")
                         
-                        if setting_sel != 'q':
-                            if setting_sel == '1':
-                                grid_loop = True
-                                while grid_loop == True:
+                        if settingSel != 'q':
+                            if settingSel == '1':
+                                gridLoop = True
+                                while gridLoop == True:
                                     print("\nGRID SIZE (default 40x40):")
-                                    grid_tmp = input("\nPROMPT (width x height): ").lower().replace("x"," ").replace(","," ").split()
+                                    gridTmp = input("\nPROMPT (width x height): ").lower().replace("x"," ").replace(","," ").split()
                                     
-                                    if grid_tmp != []:
+                                    if gridTmp != []:
                                         save = input("\nSAVE SETTING? (Y/N): ").lower()
                                         
                                         if save == 'y':
-                                            width, height = int(grid_tmp[0]), int(grid_tmp[1])
+                                            width, height = int(gridTmp[0]), int(gridTmp[1])
                                             
-                                        grid_loop = False
+                                        gridLoop = False
                                     
                                     else:
                                         print("\nINFO: Settings unchanged.")
-                                        grid_loop = False                                    
+                                        gridLoop = False                                    
                                     
-                            elif setting_sel == '2':
-                                res_loop = True
-                                while res_loop == True:
+                            elif settingSel == '2':
+                                resLoop = True
+                                while resLoop == True:
                                     print("\nBLOCK RESOLUTION (default 16x16 pixels):")
-                                    res_tmp = input("\nPROMPT: ")
+                                    resTmp = input("\nPROMPT: ")
                                     
-                                    if res_tmp != '':
+                                    if resTmp != '':
                                         save = input("\nSAVE SETTING? (Y/N): ").lower()
                                         
                                         if save == 'y':
-                                            res = int(res_tmp)
+                                            res = int(resTmp)
                                             
-                                        res_loop = False
+                                        resLoop = False
                                     
                                     else:
                                         print("\nINFO: Settings unchanged.")
-                                        res_loop = False
+                                        resLoop = False
                                     
-                            elif setting_sel == '3':
-                                color_loop = True
-                                while color_loop == True:
+                            elif settingSel == '3':
+                                colorLoop = True
+                                while colorLoop == True:
                                     print("\nBLOCK COLOR (default (0,0,0)):")
-                                    color_tmp = input("\nPROMPT (r,g,b): ")
+                                    colorTmp = input("\nPROMPT (r,g,b): ")
                                     
-                                    if color_tmp != '':
-                                        color_tmp = extract_single_coord(color_tmp)
+                                    if colorTmp != '':
+                                        colorTmp = extract_single_coord(colorTmp)
                                         
-                                        if len(color_tmp) == 3:
+                                        if len(colorTmp) == 3:
                                             save = input("\nSAVE SETTING? (Y/N): ").lower()
                                             
                                             if save == 'y':
-                                                block_color = Cimpl.Color(*color_tmp)
+                                                blockColor = Cimpl.Color(*colorTmp)
                                                 
-                                            color_loop = False
+                                            colorLoop = False
                                             
                                         else:
                                             print("\nERROR: Invalid colour.")
@@ -824,108 +849,108 @@ while interface_loop == True:
                                             
                                     else:
                                         print("\nINFO: Settings unchanged.")
-                                        color_loop = False
+                                        colorLoop = False
                                     
-                            elif setting_sel == '4':
-                                gif_loop = True
-                                while gif_loop == True:
+                            elif settingSel == '4':
+                                gifLoop = True
+                                while gifLoop == True:
                                     print("\nGIF SETTINGS:")
                                     print("1: Max Amount of Frames")
                                     print("2: Duration Each Frame is Displayed")
                                     print("3: GIF Output Filename")
-                                    gif_sel = input("\nPROMPT: ")
+                                    gifSel = input("\nPROMPT: ")
                                     
-                                    if gif_sel != 'q':
-                                        if gif_sel == '1':
-                                            frame_loop = True
-                                            while frame_loop == True:
+                                    if gifSel != 'q':
+                                        if gifSel == '1':
+                                            frameLoop = True
+                                            while frameLoop == True:
                                                 print("\nMAX FRAMES (default 50):")
-                                                max_frames_tmp = input("\nPROMPT: ")
+                                                maxFramesTmp = input("\nPROMPT: ")
                                                 
-                                                if max_frames_tmp != '':
+                                                if maxFramesTmp != '':
                                                     save = input("\nSAVE SETTING? (Y/N): ").lower()
                                                     
                                                     if save == 'y':
-                                                        max_frames = int(max_frames_tmp)
+                                                        maxFrames = int(maxFramesTmp)
                                                         
-                                                    frame_loop = False
+                                                    frameLoop = False
                                                 
                                                 else:
                                                     print("\nINFO: Settings unchanged.")
-                                                    frame_loop = False
+                                                    frameLoop = False
                                                 
-                                        elif gif_sel == '2':
-                                            duration_loop = True
-                                            while duration_loop == True:
+                                        elif gifSel == '2':
+                                            durationLoop = True
+                                            while durationLoop == True:
                                                 print("\nTIME PER FRAME (default 150 ms):")
-                                                duration_tmp = input("\nPROMPT (ms): ")
+                                                durationTmp = input("\nPROMPT (ms): ")
                                                 
-                                                if duration_tmp != '':
+                                                if durationTmp != '':
                                                     save = input("\nSAVE SETTING? (Y/N): ").lower()
                                                     
                                                     if save == 'y':
-                                                        duration = int(duration_tmp)
+                                                        duration = int(durationTmp)
                                                         
-                                                    duration_loop = False
+                                                    durationLoop = False
                                                     
                                                 else:
                                                     print("\nINFO: Settings unchanged.")
-                                                    duration_loop = False
+                                                    durationLoop = False
                                                 
-                                        elif gif_sel == '3':
-                                            gif_file_loop = True
-                                            while gif_file_loop == True:
+                                        elif gifSel == '3':
+                                            gifFileLoop = True
+                                            while gifFileLoop == True:
                                                 print("\nGIF OUTPUT FILENAME (default 'simulation.gif'):")
-                                                gif_file_tmp = input("\nPROMPT (.gif): ")
+                                                gifFileTmp = input("\nPROMPT (.gif): ")
                                                 
-                                                if gif_file_tmp != '':
+                                                if gifFileTmp != '':
                                                     
-                                                    if ".gif" not in gif_file_tmp:
-                                                        gif_file_tmp += ".gif"
+                                                    if ".gif" not in gifFileTmp:
+                                                        gifFileTmp += ".gif"
                                                     
                                                     save = input("\nSAVE SETTING? (Y/N): ").lower()
                                                     
                                                     if save == 'y':
-                                                        gif_file = gif_file_tmp
+                                                        gifFile = gifFileTmp
                                                         
-                                                    gif_file_loop = False
+                                                    gifFileLoop = False
                                                     
                                                 else:
                                                     print("\nINFO: Settings unchanged.")
-                                                    gif_file_loop = False
+                                                    gifFileLoop = False
                                         
                                         else:
                                             input("\nERROR: No such selection exists. Press enter:")
                                     else:
-                                        gif_loop = False
+                                        gifLoop = False
                             else:
                                 input("\nERROR: No such selection exists. Press enter:")                          
                         else:
-                            game_board, updated_state_list = create_empty_board(res, width, height)
-                            setting_loop = False               
+                            gameBoard, updatedStateList = create_empty_board(res, width, height)
+                            settingLoop = False               
                 
-                elif misc_sel == '2':
+                elif miscSel == '2':
                     help = input("\nSHOW HELP? (Y/N): ").lower()
                                                     
                     if help == 'y':
-                        print(help_file)
+                        print(helpFile)
                         input("Press enter to continue:")
-                    misc_loop = False
+                    miscLoop = False
                 
-                elif misc_sel == '3':
+                elif miscSel == '3':
                     quit = input("\nQUIT? (Y/N): ").lower()
                     
                     if quit == 'y':
-                        interface_loop = False
-                        misc_loop = False
+                        interfaceLoop = False
+                        miscLoop = False
                         
                     else:
-                        misc_loop = False
+                        miscLoop = False
                  
                 else:
                     input("\nERROR: No such selection exists. Press enter:")
             else:
-                misc_loop = False
+                miscLoop = False
     
     else:
         input("\nERROR: No such selection exists. Press enter:")
