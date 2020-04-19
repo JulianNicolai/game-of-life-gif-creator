@@ -179,13 +179,13 @@ help_file = "HELP FILE #########################################################
 # MODULE IMPORTS --------------------------------------------------------------
 import glob
 import os
-from PIL import Image
-from Cimpl import *
+import PIL
+import Cimpl # Color, save_as, get_width, get_height, copy, set_color, create_image, choose_file, show
 from typing import List, Tuple
 from copy import deepcopy
 
 # FUNCTION DEFINITIONS --------------------------------------------------------
-def set_pixel(image: Image, res: int, color: Color, x: int, y: int, state: bool) -> None:
+def set_pixel(image: Cimpl.Image, res: int, color: Cimpl.Color, x: int, y: int, state: bool) -> None:
     '''Modifies the input image by filling in a block (i.e. 15x15) with a color 
     determined by a provided state; white (dead) or black (live). The origin 
     is specified using the "true" coordinates (given by real_coords).
@@ -193,11 +193,11 @@ def set_pixel(image: Image, res: int, color: Color, x: int, y: int, state: bool)
     if state:
         state_color = color
     else:
-        state_color = Color(255,255,255)
+        state_color = Cimpl.Color(255,255,255)
         
     for y_pix in range(res - 1):
         for x_pix in range (res - 1):
-            set_color(image, x + x_pix, y + y_pix, state_color)
+            Cimpl.set_color(image, x + x_pix, y + y_pix, state_color)
 
 def real_coords(res: int, x: int, y: int) -> tuple:
     '''Returns an adjusted coordinate for placement of pixels.
@@ -207,17 +207,18 @@ def real_coords(res: int, x: int, y: int) -> tuple:
     
     return (real_x, real_y)
 
-def create_empty_board(res: int, w_blocks: int, h_blocks: int) -> Tuple[Image, List[list]]:
+def create_empty_board(res: int, w_blocks: int, h_blocks: int) -> Tuple[Cimpl.Image, List[list]]:
     '''Returns an empty grid (board) as well as a list of all starting states 
     (dead).
     '''
     width, height = real_coords(res, w_blocks, h_blocks)    
     
-    empty_board = create_image(width, height, Color(255,255,255))
+    empty_board = Cimpl.create_image(width, height, Cimpl.Color(255,255,255))
     
-    for x, y, (r, g, b) in empty_board:
+    for pixel in empty_board:
+        x, y = pixel[0], pixel[1]
         if x % res == 0 or y % res == 0:
-            set_color(empty_board, x, y, Color(170,170,170))
+            Cimpl.set_color(empty_board, x, y, Cimpl.Color(170,170,170))
     
     total_state_list = []
     
@@ -231,12 +232,12 @@ def create_empty_board(res: int, w_blocks: int, h_blocks: int) -> Tuple[Image, L
     
     return empty_board, total_state_list
 
-def refresh_board(game_board: Image, res: int, color: Color, state_list: List[list]) -> None:
+def refresh_board(game_board: Cimpl.Image, res: int, color: Cimpl.Color, state_list: List[list]) -> None:
     '''Takes the current states of living & dead blocks, and updates the game 
     board.
     '''
-    for x in range((get_width(game_board) - 1) // res):
-        for y in range((get_height(game_board) - 1) // res):
+    for x in range((Cimpl.get_width(game_board) - 1) // res):
+        for y in range((Cimpl.get_height(game_board) - 1) // res):
             set_pixel(game_board, res, color, *real_coords(res, x, y), state_list[y][x])
 
 def scan_block(x: int, y: int, width: int, height: int) -> Tuple[tuple]:
@@ -476,7 +477,7 @@ max_frames = DEF_MAX_FRAMES = 50
 res = DEF_RES = 16
 duration = DEF_DURATION = 150
 gif_file = DEF_GIF_FILE = "simulation.gif"
-block_color = DEF_BLOCK_COLOR = Color(0, 0, 0)
+block_color = DEF_BLOCK_COLOR = Cimpl.Color(0, 0, 0)
 
 # LOADING ---------------------------------------------------------------------
 print("Game of Life GIF Creator v1.0; by Julian Nicolai")
@@ -590,7 +591,7 @@ while interface_loop == True:
             elif item_selection == '3':
                 print("\nLOAD DATA:")
                 print("\nChoosing file...")
-                filename = choose_file()
+                filename = Cimpl.choose_file()
                 item_data = open(filename, 'r')
                 print("Data loaded successfully from path:")
                 print(filename)                
@@ -641,7 +642,7 @@ while interface_loop == True:
                         load = input("\nLOAD BOARD? (Y/N): ").lower()
                         
                         if load == 'y':
-                            new_board_coords = load_state_from_file(choose_file())
+                            new_board_coords = load_state_from_file(Cimpl.choose_file())
                             updated_state_list = place_item(updated_state_list, new_board_coords)
                             
                         else:
@@ -690,7 +691,7 @@ while interface_loop == True:
                 ls_loop = False
         
     elif selection == '3':
-        show(game_board)
+        Cimpl.show(game_board)
         
     elif selection == '4':
         print("INFO: This may take a while, please be patient. Running simulation....")
@@ -706,7 +707,7 @@ while interface_loop == True:
             pixel_state_list = deepcopy(updated_state_list)
             
             refresh_board(game_board, res, block_color, updated_state_list)
-            save_as(game_board, "images/frame" + str(count) + ".png")
+            Cimpl.save_as(game_board, "images/frame" + str(count) + ".png")
             
             for scan_y in range(height):
                 for scan_x in range(width):
@@ -813,7 +814,7 @@ while interface_loop == True:
                                             save = input("\nSAVE SETTING? (Y/N): ").lower()
                                             
                                             if save == 'y':
-                                                block_color = Color(*color_tmp)
+                                                block_color = Cimpl.Color(*color_tmp)
                                                 
                                             color_loop = False
                                             
